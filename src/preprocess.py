@@ -33,6 +33,9 @@ def load_data(path = "data/kalimati_tarkari_dataset.csv"):
     ## Sort the dataframe by date to ensure that the data is in chronological order.
     df = df.sort_values(by='Date')
 
+    global COMMODITY_MAPPING
+    global UNIT_MAPPING
+
     COMMODITY_MAPPING = {commodity: i for i, commodity in enumerate(df['Commodity'].unique())}
     UNIT_MAPPING = {unit: i for i, unit in enumerate(df['Unit'].unique())}
 
@@ -68,10 +71,9 @@ def preprocess():
 
     ## Step 1: Convert the Commodity column to numerical values using mapping. This is necessary because neural networks can only work with numerical data.
     df['Commodity'] = df['Commodity'].map(COMMODITY_MAPPING)
-
     df['Unit'] = df['Unit'].map(UNIT_MAPPING)
 
-    ## print(df.head())  ## Print the first 5 rows of the dataframe to check if the data is loaded and processed correctly.
+    # print(df.head())  ## Print the first 5 rows of the dataframe to check if the data is loaded and processed correctly.
 
     ## Step 2: divide the dataset into training and testing sets
     ## we cannot use train_test_split here because we need to maintain the temporal order of the data.

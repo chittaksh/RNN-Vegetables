@@ -4,7 +4,7 @@
 import streamlit as st
 
 from predict import predict, predict_from_array
-from preprocess import load_data, FEATURES
+from preprocess import COMMODITY_MAPPING, UNIT_MAPPING, load_data, FEATURES
 
 ## Page configuration for the Streamlit app
 
@@ -34,12 +34,16 @@ st.write(
 ## load the dataset to display the last 7 days of data for user reference
 df = load_data()
 
+## Preprocess the input data
+COMMODITY_MAPPING = {commodity: i for i, commodity in enumerate(df['Commodity'].unique())}
+UNIT_MAPPING = {unit: i for i, unit in enumerate(df['Unit'].unique())}
+
 st.session_state.commodity_select = st.session_state.get("commodity_select", df['Commodity'].unique()[0])  ## default to the first commodity in the list
 
 ## adda dropdown here to select the commodity for which the prediction is to be made
 st.selectbox(
     "Select Commodity for Prediction",
-    options=df['Commodity'].unique(),
+    options=list(COMMODITY_MAPPING.keys()),
     key="commodity_select"
 )
 
@@ -51,7 +55,14 @@ print(st.session_state.commodity_select)
 ## Prediction section
 
 if st.button("Predict Vegetable Prices for the Next Day"):
-    latest = df[df['Commodity'] == st.session_state.commodity_select][FEATURES].tail(7).values  ## get the last 7 days of data for prediction
+
+    ## Step 1: Convert the Commodity column to numerical values using mapping. This is necessary because neural networks can only work with numerical data.
+    df['Commodity'] = df['Commodity'].map(COMMODITY_MAPPING)
+    df['Unit'] = df['Unit'].map(UNIT_MAPPING)
+
+    latest = df[df['Commodity'] == COMMODITY_MAPPING[st.session_state.commodity_select]][FEATURES].tail(7).values  ## get the last 7 days of data for prediction
+
+    print(latest)  ## print the last 7 days of data for debugging
 
     ## convert into numpy array and reshape to (7, number_of_features)
     input_data = latest.reshape((7, -1))  ## reshape to (7, number_of_features)
