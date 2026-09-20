@@ -32,15 +32,15 @@ def main():
 
     ## Step 4: Train the model
     model.fit(X_train, y_train,
-              epochs=30, 
+              epochs=10, 
               batch_size=32, 
               validation_data = (X_test, y_test)
               )
     
     ## Step 5: Save the trained model for future use
-    model.save('models/bike_rental_model.h5')
+    model.save('models/vegetable_model.h5')
 
-    print("Model training completed and saved to 'models/bike_rental_model.h5'.")
+    print("Model training completed and saved to 'models/vegetable_model.h5'.")
 
     ## Step 6: Make predictions on the test set and evaluate the model's performance
     predictions = model.predict(X_test)

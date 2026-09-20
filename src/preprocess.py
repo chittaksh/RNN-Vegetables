@@ -17,6 +17,9 @@ FEATURES = [
     "Maximum", 
     "Average"]
 
+COMMODITY_MAPPING = {}
+UNIT_MAPPING = {}
+
 
 ## Load the dataset
 
@@ -29,6 +32,12 @@ def load_data(path = "data/kalimati_tarkari_dataset.csv"):
 
     ## Sort the dataframe by date to ensure that the data is in chronological order.
     df = df.sort_values(by='Date')
+
+    COMMODITY_MAPPING = {commodity: i for i, commodity in enumerate(df['Commodity'].unique())}
+    UNIT_MAPPING = {unit: i for i, unit in enumerate(df['Unit'].unique())}
+
+    # print("Commodity Mapping:", COMMODITY_MAPPING)
+    # print("Unit Mapping:", UNIT_MAPPING)
 
     return df
 
@@ -58,11 +67,9 @@ def preprocess():
     df = load_data()
 
     ## Step 1: Convert the Commodity column to numerical values using mapping. This is necessary because neural networks can only work with numerical data.
-    commodity_mapping = {commodity: i for i, commodity in enumerate(df['Commodity'].unique())}
-    df['Commodity'] = df['Commodity'].map(commodity_mapping)
+    df['Commodity'] = df['Commodity'].map(COMMODITY_MAPPING)
 
-    unit_mapping = {unit: i for i, unit in enumerate(df['Unit'].unique())}
-    df['Unit'] = df['Unit'].map(unit_mapping)
+    df['Unit'] = df['Unit'].map(UNIT_MAPPING)
 
     ## print(df.head())  ## Print the first 5 rows of the dataframe to check if the data is loaded and processed correctly.
 
