@@ -50,7 +50,6 @@ st.selectbox(
 ## Show the last 7 days of data for user reference
 st.subheader("Last 7 Days of Data")
 st.dataframe(df[df['Commodity'] == st.session_state.commodity_select][FEATURES].tail(7))
-print(st.session_state.commodity_select)
 
 ## Prediction section
 
@@ -62,7 +61,7 @@ if st.button("Predict Vegetable Prices for the Next Day"):
 
     latest = df[df['Commodity'] == COMMODITY_MAPPING[st.session_state.commodity_select]][FEATURES].tail(7).values  ## get the last 7 days of data for prediction
 
-    print(latest)  ## print the last 7 days of data for debugging
+    # print(latest)  ## print the last 7 days of data for debugging
 
     ## convert into numpy array and reshape to (7, number_of_features)
     input_data = latest.reshape((7, -1))  ## reshape to (7, number_of_features)
